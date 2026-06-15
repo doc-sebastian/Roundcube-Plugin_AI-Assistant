@@ -1,0 +1,101 @@
+<?php
+
+/**
+ * Konfiguration für das AI Assistant ("KI Antwort") Plugin
+ *
+ * Diese Datei nach "config.inc.php" kopieren und anpassen:
+ *   cp config.inc.php.dist config.inc.php
+ */
+
+// ---------------------------------------------------------------------
+// API-Verbindung (OpenAI-kompatibel)
+// ---------------------------------------------------------------------
+
+// Basis-URL des API-Endpunkts. Es wird automatisch "/chat/completions"
+// angehängt, falls nicht bereits angegeben. Beispiele:
+//
+//   OpenAI:   https://api.openai.com/v1
+//   LocalAI:  http://localhost:8080/v1
+//   Ollama:   http://localhost:11434/v1
+//   vLLM:     http://localhost:8000/v1
+//   LM Studio: http://localhost:1234/v1
+//
+$config['ai_assistant_api_url'] = 'https://api.openai.com/v1';
+
+// API-Schlüssel. Für lokale Endpunkte (LocalAI, Ollama, ...) kann das
+// Feld in der Regel leer bleiben.
+$config['ai_assistant_api_key'] = '';
+
+// Zu verwendendes Modell, z. B. 'gpt-4o-mini', 'gpt-4o',
+// 'llama3.1:8b' (Ollama), 'mistral-7b-instruct' (LocalAI) ...
+$config['ai_assistant_model'] = 'gpt-4o-mini';
+
+// Maximale Anzahl generierter Tokens pro Antwort
+$config['ai_assistant_max_tokens'] = 1500;
+
+// Timeout für API-Anfragen in Sekunden (lokale Modelle können langsam sein)
+$config['ai_assistant_timeout'] = 120;
+
+// SSL-Zertifikat prüfen. Nur für lokale/selbstsignierte Endpunkte
+// auf false setzen!
+$config['ai_assistant_verify_ssl'] = true;
+
+// Zusätzliche Parameter, die mit jeder API-Anfrage gesendet werden
+// (nützlich für lokale Modelle), z. B.:
+//   $config['ai_assistant_extra_params'] = ['top_p' => 0.9];
+$config['ai_assistant_extra_params'] = null;
+
+// ---------------------------------------------------------------------
+// Funktionsumfang
+// ---------------------------------------------------------------------
+
+// Button "KI-Zusammenfassung" in der Nachrichtenansicht anzeigen
+$config['ai_assistant_enable_summary'] = true;
+
+// Benutzern erlauben, die KI-Prompts in den Einstellungen anzupassen
+$config['ai_assistant_allow_custom_prompts'] = true;
+
+// Benutzern erlauben, eigene Anbieter-Zugangsdaten (URL, Modell, API-Schlüssel)
+// in den Einstellungen zu hinterlegen. Der API-Schlüssel wird dabei – wie das
+// Mail-Passwort – verschlüsselt gespeichert. Die Benutzerwerte haben Vorrang
+// vor den hier gesetzten serverweiten Vorgaben.
+$config['ai_assistant_allow_user_provider'] = true;
+
+// Maximale Zeichenanzahl der Originalnachricht / des Kontexts,
+// die an die KI übergeben wird
+$config['ai_assistant_max_context_chars'] = 12000;
+
+// ---------------------------------------------------------------------
+// Standardwerte (können von Benutzern in den Einstellungen geändert werden)
+// ---------------------------------------------------------------------
+
+// Stil: assertive, casual, enthusiastic, funny, informational,
+//       professional, urgent, witty
+$config['ai_assistant_default_style'] = 'professional';
+
+// Länge: short, medium, long
+$config['ai_assistant_default_length'] = 'medium';
+
+// Sprache: 'auto' oder ein Sprachcode wie 'de', 'en', 'es', 'fr', 'it',
+// 'pt', 'nl', 'pl', 'ru', 'uk', 'cs', 'sk', 'hu', 'ro', 'bg', 'el', 'tr',
+// 'ar', 'he', 'hi', 'zh-CN', 'zh-TW', 'ja', 'ko', 'vi', 'th', 'id', 'ms',
+// 'sv', 'da', 'no', 'fi', 'et', 'lv', 'lt', 'hr', 'sl', 'sr'
+$config['ai_assistant_default_language'] = 'auto';
+
+// Kreativität 0-100 (wird auf die Temperatur 0.0-1.5 abgebildet)
+$config['ai_assistant_default_creativity'] = 50;
+
+// Standard-Anweisung, die beim Öffnen des KI-Assistenten automatisch im Feld
+// "Anweisung an die KI" vorausgefüllt wird (Benutzer können sie überschreiben).
+$config['ai_assistant_default_instruction'] = '';
+
+// ---------------------------------------------------------------------
+// KI-Prompts (optional)
+// ---------------------------------------------------------------------
+// Hier können die serverweiten Standard-Prompts überschrieben werden.
+// Verfügbare Platzhalter: %style%, %length%, %language%
+// Auskommentiert = eingebaute Standard-Prompts werden verwendet.
+//
+// $config['ai_assistant_prompt_compose'] = "You are an AI assistant ...";
+// $config['ai_assistant_prompt_reply']   = "You are an AI assistant ...";
+// $config['ai_assistant_prompt_summary'] = "You are an AI assistant ...";

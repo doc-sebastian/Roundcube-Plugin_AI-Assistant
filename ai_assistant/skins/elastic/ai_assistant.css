@@ -1,0 +1,225 @@
+/**
+ * AI Assistant plugin - styles for the Elastic skin
+ */
+
+/* ---- settings section icon (sparkles) ---- */
+#sections-table tr.ai_assistant td.section:before,
+#sections-table tr#rcmrowai_assistant td.section:before,
+table.listing tr.ai_assistant td.section:before,
+.listing tr.ai_assistant td:first-child:before,
+.listing li.ai_assistant > a:before,
+#settings-menu li.ai_assistant > a:before,
+ul.listing li.ai_assistant a:before,
+tr.ai-section-icon td.section:before,
+tr.ai-section-icon td:first-child:before,
+li.ai-section-icon > a:before,
+li.ai-section-icon a:before {
+    content: "" !important;
+    display: inline-block !important;
+    width: 1.2em !important;
+    height: 1.2em !important;
+    margin-inline-end: 0.5em;
+    vertical-align: -0.2em;
+    background-color: currentColor !important;
+    font-family: inherit !important;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1.5l2.4 6.1 6.1 2.4-6.1 2.4L12 18.5l-2.4-6.1L3.5 10l6.1-2.4z'/%3E%3Cpath d='M19.5 14.5l1.1 2.9 2.9 1.1-2.9 1.1-1.1 2.9-1.1-2.9-2.9-1.1 2.9-1.1z'/%3E%3C/svg%3E") no-repeat center / contain !important;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1.5l2.4 6.1 6.1 2.4-6.1 2.4L12 18.5l-2.4-6.1L3.5 10l6.1-2.4z'/%3E%3Cpath d='M19.5 14.5l1.1 2.9 2.9 1.1-2.9 1.1-1.1 2.9-1.1-2.9-2.9-1.1 2.9-1.1z'/%3E%3C/svg%3E") no-repeat center / contain !important;
+}
+
+/* ---- toolbar button + popup/context menu icon (sparkles) ---- */
+a.ai-assistant:before,
+.ai-assistant > .inner:before,
+.toolbarmenu a.ai-assistant:before,
+.toolbarmenu li > a.ai-assistant:before,
+ul.menu a.ai-assistant:before,
+.contextmenu a.ai-assistant:before {
+    content: "" !important;
+    display: inline-block !important;
+    width: 1.3em;
+    height: 1.3em;
+    vertical-align: middle;
+    background-color: currentColor !important;
+    font-family: inherit !important;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1.5l2.4 6.1 6.1 2.4-6.1 2.4L12 18.5l-2.4-6.1L3.5 10l6.1-2.4z'/%3E%3Cpath d='M19.5 14.5l1.1 2.9 2.9 1.1-2.9 1.1-1.1 2.9-1.1-2.9-2.9-1.1 2.9-1.1z'/%3E%3Cpath d='M5.5 15.5l.9 2.3 2.3.9-2.3.9-.9 2.3-.9-2.3-2.3-.9 2.3-.9z'/%3E%3C/svg%3E") no-repeat center / contain !important;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1.5l2.4 6.1 6.1 2.4-6.1 2.4L12 18.5l-2.4-6.1L3.5 10l6.1-2.4z'/%3E%3Cpath d='M19.5 14.5l1.1 2.9 2.9 1.1-2.9 1.1-1.1 2.9-1.1-2.9-2.9-1.1 2.9-1.1z'/%3E%3Cpath d='M5.5 15.5l.9 2.3 2.3.9-2.3.9-.9 2.3-.9-2.3-2.3-.9 2.3-.9z'/%3E%3C/svg%3E") no-repeat center / contain !important;
+}
+
+/* in popup/context menus add spacing before the label */
+.toolbarmenu a.ai-assistant:before,
+.toolbarmenu li > a.ai-assistant:before,
+ul.menu a.ai-assistant:before,
+.contextmenu a.ai-assistant:before {
+    width: 1.2em;
+    height: 1.2em;
+    margin-inline-end: 0.5em;
+    vertical-align: -0.2em;
+}
+
+/* ---- compose dialog ---- */
+.ai-assistant-form .form-group {
+    margin-bottom: 0.85rem;
+}
+
+.ai-assistant-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+
+.ai-assistant-form textarea,
+.ai-assistant-form select {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.ai-assistant-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.ai-assistant-row > .form-group {
+    flex: 1 1 150px;
+    min-width: 130px;
+}
+
+#ai-creativity {
+    width: 100%;
+}
+
+.ai-creativity-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 90%;
+    opacity: 0.7;
+}
+
+.ai-context-check {
+    margin-bottom: 0.85rem;
+}
+
+.ai-context-check label {
+    display: inline;
+    font-weight: normal;
+    margin-left: 0.4rem;
+}
+
+.ai-preview textarea {
+    font-family: inherit;
+}
+
+/* ---- summary dialog ---- */
+.ai-summary-text {
+    white-space: pre-wrap;
+    max-height: 60vh;
+    overflow: auto;
+    line-height: 1.45;
+}
+
+/* ---- settings ---- */
+.ai-prompts-hint {
+    display: block;
+    font-size: 90%;
+    opacity: 0.75;
+    max-width: 40em;
+}
+
+/* ---- Markdown styling for summaries ---- */
+.ai-summary-text h1, 
+.ai-summary-text h2, 
+.ai-summary-text h3, 
+.ai-summary-text h4, 
+.ai-summary-text h5, 
+.ai-summary-text h6 {
+    font-weight: bold;
+    margin-top: 0.8em;
+    margin-bottom: 0.5em;
+    color: #333;
+}
+
+.ai-summary-text h1 { font-size: 1.4em; }
+.ai-summary-text h2 { font-size: 1.3em; }
+.ai-summary-text h3 { font-size: 1.2em; }
+.ai-summary-text h4 { font-size: 1.1em; }
+.ai-summary-text h5 { font-size: 1em; }
+.ai-summary-text h6 { font-size: 1em; }
+
+.ai-summary-text p {
+    margin-top: 0.5em;
+    margin-bottom: 0.8em;
+}
+
+.ai-summary-text ul, 
+.ai-summary-text ol {
+    margin-top: 0.5em;
+    margin-bottom: 0.8em;
+    padding-left: 1.5em;
+}
+
+.ai-summary-text li {
+    margin-bottom: 0.3em;
+}
+
+.ai-summary-text table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+}
+
+.ai-summary-text th, 
+.ai-summary-text td {
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.ai-summary-text th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.ai-summary-text tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.ai-summary-text code {
+    font-family: monospace;
+    background-color: #f0f0f0;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.ai-summary-text pre {
+    background-color: #f0f0f0;
+    padding: 8px 12px;
+    border-radius: 4px;
+    overflow: auto;
+    margin: 1em 0;
+}
+
+.ai-summary-text pre code {
+    padding: 0;
+    background-color: transparent;
+}
+
+.ai-summary-text blockquote {
+    border-left: 4px solid #ddd;
+    padding-left: 1em;
+    margin: 1em 0;
+    color: #666;
+}
+
+.ai-summary-text strong, 
+.ai-summary-text b {
+    font-weight: bold;
+}
+
+.ai-summary-text em, 
+.ai-summary-text i {
+    font-style: italic;
+}
+
+.ai-summary-text a {
+    color: #0066cc;
+    text-decoration: underline;
+}

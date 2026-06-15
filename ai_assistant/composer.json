@@ -1,0 +1,26 @@
+{
+    "name": "custom/ai_assistant",
+    "type": "roundcube-plugin",
+    "description": "AI assistant for Roundcube: compose e-mails and summarize messages via any OpenAI-compatible API (OpenAI, LocalAI, Ollama, vLLM, LM Studio, ...)",
+    "keywords": ["ai", "openai", "localai", "ollama", "compose", "mail"],
+    "license": "MIT",
+    "version": "1.0.0",
+    "authors": [
+        {
+            "name": "Sebastian Fischer",
+            "email": "post@scriptometer.de",
+            "role": "Developer"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://plugins.roundcube.net/"
+        }
+    ],
+    "require": {
+        "php": ">=7.3",
+        "roundcube/plugin-installer": ">=0.1.3"
+    },
+    "minimum-stability": "dev"
+}

@@ -1,0 +1,107 @@
+/**
+ * Markdown styling for summaries - Elastic skin
+ */
+
+.ai-summary-text {
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+.ai-summary-text h1, 
+.ai-summary-text h2, 
+.ai-summary-text h3, 
+.ai-summary-text h4, 
+.ai-summary-text h5, 
+.ai-summary-text h6 {
+    font-weight: bold;
+    margin-top: 0.8em;
+    margin-bottom: 0.5em;
+    color: #333;
+}
+
+.ai-summary-text h1 { font-size: 1.4em; }
+.ai-summary-text h2 { font-size: 1.3em; }
+.ai-summary-text h3 { font-size: 1.2em; }
+.ai-summary-text h4 { font-size: 1.1em; }
+.ai-summary-text h5 { font-size: 1em; }
+.ai-summary-text h6 { font-size: 1em; }
+
+.ai-summary-text p {
+    margin-top: 0.5em;
+    margin-bottom: 0.8em;
+}
+
+.ai-summary-text ul, 
+.ai-summary-text ol {
+    margin-top: 0.5em;
+    margin-bottom: 0.8em;
+    padding-left: 1.5em;
+}
+
+.ai-summary-text li {
+    margin-bottom: 0.3em;
+}
+
+.ai-summary-text table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+}
+
+.ai-summary-text th, 
+.ai-summary-text td {
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.ai-summary-text th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.ai-summary-text tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.ai-summary-text code {
+    font-family: monospace;
+    background-color: #f0f0f0;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+.ai-summary-text pre {
+    background-color: #f0f0f0;
+    padding: 8px 12px;
+    border-radius: 4px;
+    overflow: auto;
+    margin: 1em 0;
+}
+
+.ai-summary-text pre code {
+    padding: 0;
+    background-color: transparent;
+}
+
+.ai-summary-text blockquote {
+    border-left: 4px solid #ddd;
+    padding-left: 1em;
+    margin: 1em 0;
+    color: #666;
+}
+
+.ai-summary-text strong, 
+.ai-summary-text b {
+    font-weight: bold;
+}
+
+.ai-summary-text em, 
+.ai-summary-text i {
+    font-style: italic;
+}
+
+.ai-summary-text a {
+    color: #0066cc;
+    text-decoration: underline;
+}
