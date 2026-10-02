@@ -36,11 +36,13 @@
 
         if (rcmail.env.task === 'settings') {
             mark_settings_section();
+            init_model_search();
         }
 
         rcmail.addEventListener('plugin.ai_assistant.result', ai_on_result);
         rcmail.addEventListener('plugin.ai_assistant.summary', ai_on_summary);
         rcmail.addEventListener('plugin.ai_assistant.error', ai_on_error);
+        rcmail.addEventListener('plugin.ai_assistant.models', ai_on_models);
     });
 
     // Add an icon class to our settings section row (done in JS to avoid
@@ -303,6 +305,112 @@
 
         var el = document.getElementById('composebody');
         return el ? el.value : '';
+    }
+
+    // ------------------------------------------------------------------
+    // Settings: model search
+    // ------------------------------------------------------------------
+
+    var model_popup = null;
+
+    function init_model_search() {
+        $(document).on('click', '#ai-pref-model-search', function (e) {
+            e.preventDefault();
+            do_model_search();
+        });
+    }
+
+    function do_model_search() {
+        // use the (possibly unsaved) values from the open form so a new
+        // provider can be tested before saving; falls back to the stored
+        // configuration via the backend when a field is empty
+        var params = {
+            _api_url: $('#ai-pref-url').val() || '',
+            _api_key: $('#ai-pref-key').val() || ''
+        };
+
+        $('#ai-pref-model-search').prop('disabled', true);
+
+        var lock = rcmail.set_busy(true, 'ai_assistant.searchingmodels');
+        rcmail.http_post('plugin.ai_assistant.models', params, lock);
+    }
+
+    function ai_on_models(data) {
+        $('#ai-pref-model-search').prop('disabled', false);
+
+        var models = (data && data.models) || [];
+
+        if (!models.length) {
+            rcmail.display_message(t('model_search_empty'), 'notice');
+            return;
+        }
+
+        show_model_dialog(models);
+    }
+
+    function show_model_dialog(models) {
+        var current = $.trim($('#ai-pref-model').val() || '');
+
+        var filter = $('<input type="text" class="form-control ai-model-filter" placeholder="">')
+            .attr('placeholder', t('model_filter_placeholder'));
+
+        var list = $('<div class="ai-model-list">');
+        var noMatch = $('<div class="ai-model-nomatch">').hide().text(t('model_filter_nomatch'));
+
+        function renderList(term) {
+            list.empty();
+            noMatch.hide();
+
+            var re = null;
+            term = $.trim(term || '').toLowerCase();
+            if (term) {
+                re = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+            }
+
+            $.each(models, function (i, name) {
+                if (re && !re.test(String(name).toLowerCase())) {
+                    return;
+                }
+                list.append(
+                    $('<div class="ai-model-item">')
+                        .toggleClass('selected', name === current)
+                        .text(name)
+                        .on('click', function () {
+                            $('#ai-pref-model').val(name).trigger('change');
+                            if (model_popup) {
+                                model_popup.dialog('close');
+                            }
+                            rcmail.display_message(t('model_selected'), 'confirmation');
+                        })
+                );
+            });
+
+            if (!list.children().length) {
+                noMatch.show();
+            }
+        }
+
+        filter.on('input keyup', function () {
+            renderList($(this).val());
+        });
+
+        var content = $('<div class="ai-model-picker">')
+            .append(filter)
+            .append(list)
+            .append(noMatch);
+
+        model_popup = rcmail.show_popup_dialog(content, t('model_search_dialog_title'), [
+            { text: t('close'), 'class': 'cancel', click: function () { $(this).dialog('close'); } }
+        ], {
+            width: 480,
+            resizable: true,
+            height: 420,
+            classes: { 'ui-dialog': 'ai-model-dialog' },
+            close: function () { model_popup = null; }
+        });
+
+        renderList('');
+        setTimeout(function () { filter.focus(); }, 50);
     }
 
     // ------------------------------------------------------------------
