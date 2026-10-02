@@ -218,3 +218,50 @@
     color: #666;
     max-width: 40em;
 }
+
+/* "Suchen" button next to the model input in the settings */
+#ai-pref-model-search {
+    margin-left: 5px;
+    vertical-align: baseline;
+    cursor: pointer;
+}
+
+/* model picker dialog */
+.ai-model-picker .ai-model-filter {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+}
+
+.ai-model-picker .ai-model-list {
+    max-height: 280px;
+    overflow: auto;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    background: #fff;
+}
+
+.ai-model-picker .ai-model-item {
+    padding: 5px 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    word-break: break-all;
+}
+
+.ai-model-picker .ai-model-item:last-child {
+    border-bottom: none;
+}
+
+.ai-model-picker .ai-model-item:hover {
+    background-color: #f0f4fa;
+}
+
+.ai-model-picker .ai-model-item.selected {
+    background-color: #dce9f7;
+    font-weight: bold;
+}
+
+.ai-model-picker .ai-model-nomatch {
+    padding: 10px;
+    color: #666;
+}
