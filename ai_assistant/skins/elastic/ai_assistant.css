@@ -124,6 +124,52 @@ ul.menu a.ai-assistant:before,
     max-width: 40em;
 }
 
+/* "Suchen" button next to the model input in the settings */
+#ai-pref-model-search {
+    margin-left: 0.4rem;
+    vertical-align: baseline;
+    cursor: pointer;
+}
+
+/* model picker dialog */
+.ai-model-picker .ai-model-filter {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 0.5rem;
+}
+
+.ai-model-picker .ai-model-list {
+    max-height: 280px;
+    overflow: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.ai-model-picker .ai-model-item {
+    padding: 6px 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    word-break: break-all;
+}
+
+.ai-model-picker .ai-model-item:last-child {
+    border-bottom: none;
+}
+
+.ai-model-picker .ai-model-item:hover {
+    background-color: #f0f4fa;
+}
+
+.ai-model-picker .ai-model-item.selected {
+    background-color: #dce9f7;
+    font-weight: bold;
+}
+
+.ai-model-picker .ai-model-nomatch {
+    padding: 10px;
+    opacity: 0.75;
+}
+
 /* ---- Markdown styling for summaries ---- */
 .ai-summary-text h1, 
 .ai-summary-text h2, 
