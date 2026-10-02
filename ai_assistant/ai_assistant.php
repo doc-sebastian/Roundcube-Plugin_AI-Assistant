@@ -179,6 +179,7 @@ class ai_assistant extends rcube_plugin
         elseif ($this->rc->task == 'settings') {
             $this->include_stylesheet($this->local_skin_path() . '/ai_assistant.css');
             $this->include_script('ai_assistant.js');
+            $this->register_action('plugin.ai_assistant.models', [$this, 'action_models']);
             $this->add_hook('preferences_sections_list', [$this, 'prefs_section']);
             $this->add_hook('preferences_list', [$this, 'prefs_list']);
             $this->add_hook('preferences_save', [$this, 'prefs_save']);
@@ -355,6 +356,140 @@ class ai_assistant extends rcube_plugin
     }
 
     /**
+     * AJAX handler: list the models available at the configured API endpoint.
+     *
+     * The (possibly unsaved) values from the open settings form take
+     * precedence so a new provider can be tested before saving; empty
+     * fields fall back to the stored configuration.
+     */
+    public function action_models()
+    {
+        $config = $this->rc->config;
+
+        if (!$config->get('ai_assistant_allow_user_provider', true)) {
+            return $this->send_error($this->gettext('error_generic'));
+        }
+
+        $url = trim((string) rcube_utils::get_input_value('_api_url', rcube_utils::INPUT_POST));
+        $key = trim((string) rcube_utils::get_input_value('_api_key', rcube_utils::INPUT_POST));
+
+        if ($url === '') {
+            $url = trim((string) $config->get('ai_assistant_api_url', ''));
+        }
+        if ($key === '') {
+            $key = $this->resolve_api_key();
+        }
+
+        $result = $this->api_list_models($url, $key);
+
+        if (!empty($result['error'])) {
+            return $this->send_error($result['error']);
+        }
+
+        $this->rc->output->command('plugin.ai_assistant.models', ['models' => $result['models']]);
+        $this->rc->output->send();
+    }
+
+    /**
+     * Query the OpenAI-compatible /models endpoint
+     *
+     * @return array ['models' => array] on success, ['error' => string] on failure
+     */
+    private function api_list_models($url, $key)
+    {
+        $config = $this->rc->config;
+
+        if ($url === '') {
+            $url = 'https://api.openai.com/v1';
+        }
+
+        // normalize: strip a trailing /chat/completions, then append /models
+        $url = rtrim($url, '/');
+        $url = preg_replace('#/chat/completions$#', '', $url);
+        $url .= '/models';
+
+        $headers = [];
+        if ($key !== '') {
+            $headers[] = 'Authorization: Bearer ' . $key;
+        }
+
+        $verify = (bool) $config->get('ai_assistant_verify_ssl', true);
+
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER     => $headers,
+            CURLOPT_TIMEOUT        => 30,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_SSL_VERIFYPEER => $verify,
+            CURLOPT_SSL_VERIFYHOST => $verify ? 2 : 0,
+        ]);
+
+        $response = curl_exec($ch);
+        $errno    = curl_errno($ch);
+        $error    = curl_error($ch);
+        $code     = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($errno) {
+            $this->log_error("cURL error #$errno: $error (URL: $url)");
+            return ['error' => $this->gettext('error_connection')];
+        }
+
+        $data = json_decode((string) $response, true);
+
+        if (!is_array($data)) {
+            $this->log_error("Invalid JSON response (HTTP $code): " . substr((string) $response, 0, 500));
+            return ['error' => $this->gettext('error_generic')];
+        }
+
+        if (isset($data['error'])) {
+            $msg = is_array($data['error'])
+                ? (isset($data['error']['message']) ? $data['error']['message'] : 'API error')
+                : (string) $data['error'];
+            $this->log_error("API error (HTTP $code): $msg");
+            return ['error' => $this->gettext('error_api') . ' ' . $msg];
+        }
+
+        if ($code >= 400) {
+            $this->log_error("HTTP error $code: " . substr((string) $response, 0, 500));
+            return ['error' => $this->gettext('error_generic')];
+        }
+
+        // OpenAI-compatible: {"object":"list","data":[{"id":"...",...}]};
+        // some providers use "models" instead of "data"
+        $raw = null;
+        if (isset($data['data']) && is_array($data['data'])) {
+            $raw = $data['data'];
+        }
+        elseif (isset($data['models']) && is_array($data['models'])) {
+            $raw = $data['models'];
+        }
+
+        $list = [];
+        if (is_array($raw)) {
+            foreach ($raw as $item) {
+                if (is_string($item)) {
+                    $list[] = $item;
+                }
+                elseif (is_array($item)) {
+                    foreach (['id', 'name', 'model'] as $field) {
+                        if (!empty($item[$field]) && is_string($item[$field])) {
+                            $list[] = $item[$field];
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        $list = array_values(array_unique($list));
+        natcasesort($list);
+
+        return ['models' => array_values($list)];
+    }
+
+    /**
      * Call the OpenAI-compatible chat completions API
      *
      * @return array ['text' => string] on success, ['error' => string] on failure
@@ -488,9 +623,19 @@ class ai_assistant extends rcube_plugin
                 'name' => '_ai_model', 'id' => 'ai-pref-model', 'size' => 30,
                 'placeholder' => 'gpt-4o-mini',
             ]);
+
+            // "Suchen" button: fetches the available models from the
+            // provider so the user can pick one instead of typing it
+            $search = html::tag('button', [
+                'type'  => 'button',
+                'id'    => 'ai-pref-model-search',
+                'class' => 'button ai-model-search',
+                'title' => $this->gettext('model_search_title'),
+            ], rcube::Q($this->gettext('model_search')));
+
             $options['model'] = [
                 'title'   => html::label('ai-pref-model', $this->gettext('api_model')),
-                'content' => $model->show((string) $config->get('ai_assistant_model', '')),
+                'content' => $model->show((string) $config->get('ai_assistant_model', '')) . $search,
             ];
 
             // never echo the stored key; show a placeholder if one is set
